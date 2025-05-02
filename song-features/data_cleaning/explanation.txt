@@ -1,0 +1,32 @@
+
+Step-By-Step Guide:
+1. add-audio-features.py:
+	role: merge personal spotify history with Kaggle dataset at https://www.kaggle.com/datasets/amitanshjoshi/spotify-1million-tracks?resource=download
+ 	      to add features like energy, danceability, etc
+	outputs: audio-added-Alia/Puja.csv
+
+2. data-cleaning-songs:
+	role: drop all na value + columns that aren't needed. since genre is a string and not a number, it needs to be changed. Onehot encoding is better 	for clustering and labels is better for classification, so used both (now realising that i never used this data for the classification, so it is   	okay to delete the label dataset lines of code + the .csvs)
+
+	outputs: songs-cleaned-onehot-Puja/Alia.csv, songs-cleaned-label-Puja/Alia.csv
+
+3. data-cleaning-weather.py:
+	role: clean data by dropping nas and unnecessary columns
+	outputs: weather-cleaned.csv
+
+4. merge-cleaned-data.py:
+	role: combine all weather data + song data into (once again the label one is not needed and can be deleted)
+	outputs: Alia/Puja-label.csv, Alia/Puja-onehot.csv
+
+5. clustering.py:
+	role: used DBSCAN to cluster similar songs together. If some clusters were too big, use KMeans to convert those into smaller clusters (added 1000 to  	their id so it doesn't overlap with ids from the original DBSCAN)
+	outputs: Alia/Puja-clustered.py
+6. relationship-analysis.py
+	role: basically accounts for which audio features matter the most and clusters based on those only
+	outputs: Puja/Alia-feature-clustered.csv
+
+6. final-ml-pipeline.py
+	role: run ml pipelines to match weather features with clusters. Predicts a cluster, from which we can then pick songs to recommend. Uses 3 ml model 	types and keeps the best
+	run with both Puja/Alia-clustered.csv and Puja/Alia-feature-clustered.csv and see which gives better results
+	outputs: none
+	
